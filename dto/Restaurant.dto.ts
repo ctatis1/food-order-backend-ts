@@ -5,5 +5,6 @@ export interface CreateRestaurantInput{
     ownername: string,
     password: string,
     foodType: [string],
-    pincode: string
+    pincode: string,
+    address: string,
 }
