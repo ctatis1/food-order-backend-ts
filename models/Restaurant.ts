@@ -34,6 +34,15 @@ const RestaurantSchema = new Schema({
     coverImages: { type: [String]},
     rating: {type: Number},
 },{
+    toJSON: {
+        transform(doc, ret){
+            delete ret.salt
+            delete ret.password
+            delete ret.createdAt
+            delete ret.updatedAt
+            delete ret.__v
+        }
+    },
     timestamps: true
 })
 
