@@ -1,11 +1,14 @@
 import {Response, Request, NextFunction} from 'express'
+import { CreateRestaurantInput } from '../dto'
 
-export const CreateUser =async (req: Request, res: Response, next: NextFunction) => {
-        
+export const CreateRestaurant = async (req: Request, res: Response, next: NextFunction) => {
+    const {name, phone, email, ownername, foodType, password, pincode} = <CreateRestaurantInput>req.body
+
+    return res.json({ name, phone, email, ownername, foodType, password, pincode })
 }
-export const GetUsers =async (req: Request, res: Response, next: NextFunction) => {
+export const GetRestaurants =async (req: Request, res: Response, next: NextFunction) => {
 
 }
-export const GetUserById =async (req: Request, res: Response, next: NextFunction) => {
+export const GetRestaurantById =async (req: Request, res: Response, next: NextFunction) => {
 
 }
