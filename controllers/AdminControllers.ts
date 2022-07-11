@@ -3,10 +3,18 @@ import { CreateRestaurantInput } from '../dto'
 import { Restaurant } from '../models'
 import { GenerateSalt, GeneratePassword } from '../utils'
 
+export const FindRestaurant = async (id: string | undefined, email?: string) => {
+    if(email){
+        return await Restaurant.findOne({ email: email })
+    }else{
+        return await Restaurant.findById(id)
+    }
+}
+
 export const CreateRestaurant = async (req: Request, res: Response, next: NextFunction) => {
     const {name, phone, email, ownername, foodType, password, pincode, address} = <CreateRestaurantInput>req.body
 
-    const existingRestaurant = await Restaurant.findOne({ email: email })
+    const existingRestaurant = await FindRestaurant('',email)
     if(existingRestaurant !== null){
         return res.json({ "Message": "There is already a Restaurant with this email" })
     }
@@ -43,7 +51,13 @@ export const GetRestaurants =async (req: Request, res: Response, next: NextFunct
 }
 
 export const GetRestaurantById =async (req: Request, res: Response, next: NextFunction) => {
-    const restaurant = await Restaurant.findById(req.params.id)
+    const restaurantID = req.params.id
 
-    return res.json(restaurant);
+    const restaurant = await FindRestaurant(restaurantID)
+
+    if(restaurant !== null){
+        return res.json(restaurant);
+    }
+
+    return res.json({ "Message": "There are no Restaurant with this ID" });
 }
