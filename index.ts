@@ -21,6 +21,7 @@ mongoose
         console.log('Message: ', error)
     )
 
-app.listen(8000, () => (
+app.listen(8000, () => {
+    console.clear();
     console.log('App listening at port 8000')
-))
+})

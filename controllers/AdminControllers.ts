@@ -31,9 +31,19 @@ export const CreateRestaurant = async (req: Request, res: Response, next: NextFu
 
     return res.json(createRestaurant)
 }
+
 export const GetRestaurants =async (req: Request, res: Response, next: NextFunction) => {
+    const restaurants = await Restaurant.find({})
+    
+    if(restaurants !== null){
+        return res.json(restaurants)
+    }
 
+    return res.json({ "Message": "There are no Restaurants available" })
 }
-export const GetRestaurantById =async (req: Request, res: Response, next: NextFunction) => {
 
+export const GetRestaurantById =async (req: Request, res: Response, next: NextFunction) => {
+    const restaurant = await Restaurant.findById(req.params.id)
+
+    return res.json(restaurant);
 }
