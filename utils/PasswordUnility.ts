@@ -26,7 +26,7 @@ export const ValidateSignature = async (req: Request) => {
     if(signature){
         const payload = await jwt.verify(signature.split(' ')[1], APP_SECRET) as AuthPayload
         
-        
+        req.user = payload
 
         return true
     }
