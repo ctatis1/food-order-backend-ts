@@ -6,7 +6,9 @@ const restaurantRouter = express.Router();
 
 restaurantRouter.post('/login', RestaurantLogin)
 
-restaurantRouter.get('/profile', Authenticate , GetRestaurantProfile)
+restaurantRouter.use(Authenticate)
+
+restaurantRouter.get('/profile', GetRestaurantProfile)
 restaurantRouter.patch('/profile', UpdateRestaurantProfile)
 restaurantRouter.patch('/services', UpdateRestaurantServices)
 

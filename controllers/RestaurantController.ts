@@ -1,5 +1,5 @@
 import {Request, Response, NextFunction} from 'express'
-import { RestaurantLoginInput } from '../dto'
+import { EditRestaurantInputs, RestaurantLoginInput } from '../dto'
 import { Restaurant } from '../models'
 import { GenerateSignature, ValidatePassword } from '../utils'
 import { FindRestaurant } from './AdminControllers'
@@ -41,7 +41,26 @@ export const GetRestaurantProfile =async (req: Request, res: Response, next: Nex
 }
 
 export const UpdateRestaurantProfile =async (req: Request, res: Response, next: NextFunction) => {
+    const { name, phone, address, foodType } = <EditRestaurantInputs>req.body
+    
+    const user = req.user
 
+    if(user){
+        const existingRestaurant = await FindRestaurant(user._id)
+
+        if(existingRestaurant !== null){
+            existingRestaurant.name= name;
+            existingRestaurant.phone = phone;
+            existingRestaurant.address = address;
+            existingRestaurant.foodType = foodType;
+
+            const savedResult = await existingRestaurant.save()
+            return res.json(savedResult);
+        }
+
+        return res.json(existingRestaurant)
+    }
+    return res.json({ "Message": "Login data not found" })
 }
 
 export const UpdateRestaurantServices =async (req: Request, res: Response, next: NextFunction) => {
