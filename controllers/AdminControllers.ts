@@ -34,7 +34,8 @@ export const CreateRestaurant = async (req: Request, res: Response, next: NextFu
         salt: salt,
         rating: 0,
         serviceAvailable: false,
-        coverImages: []
+        coverImages: [],
+        foods: []
     })
 
     return res.json(createRestaurant)

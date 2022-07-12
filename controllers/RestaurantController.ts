@@ -1,6 +1,8 @@
 import {Request, Response, NextFunction} from 'express'
 import { EditRestaurantInputs, RestaurantLoginInput } from '../dto'
+import { CreateFoodInput } from '../dto/Food.dto'
 import { Restaurant } from '../models'
+import { Food } from '../models/Food'
 import { GenerateSignature, ValidatePassword } from '../utils'
 import { FindRestaurant } from './AdminControllers'
 
@@ -79,5 +81,43 @@ export const UpdateRestaurantServices =async (req: Request, res: Response, next:
         return res.json(existingRestaurant)
     }
     return res.json({ "Message": "Login data not found" })
+}
+
+export const AddFood =async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user
+
+    if(user){
+        const { name, description, category, foodType, readyTime, price } = <CreateFoodInput>req.body
+
+        const restaurant = await FindRestaurant(user._id)
+
+        if(restaurant !== null){
+            const createFood = await Food.create({
+                restaurantId: restaurant._id,
+                name: name,
+                description: description,
+                category: category,
+                foodType: foodType,
+                readyTime: readyTime,
+                price: price,   
+                rating: 0,
+
+            })
+            restaurant.foods.push(createFood);
+            const result = await restaurant.save();
+
+            res.json(result)
+        }
+    }
+    return res.json({ "Message": "Something went wrong adding food" })
+}
+
+export const GetFoods =async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user
+
+    if(user){
+
+    }
+    return res.json({ "Message": "There are no food found" })
 }
 

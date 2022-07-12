@@ -9,7 +9,7 @@ interface RestaurantDoc extends Document{
     foodType: [string];
     pincode: string;
     address: string;
-/*     foods: any; */
+    foods: any;
     salt: string;
     serviceAvailable: boolean;
     coverImages: [string];
@@ -25,10 +25,10 @@ const RestaurantSchema = new Schema({
     foodType: { type: [String]},
     pincode: { type: String, required: true },
     address: { type: String },
-/*     foods: {
+    foods: [{
         type: mongoose.SchemaTypes.ObjectId,
-        ref: ''
-    }, */
+        ref: 'food'
+    }],
     salt: { type: String, required: true },
     serviceAvailable: { type: Boolean, required: true },
     coverImages: { type: [String]},
