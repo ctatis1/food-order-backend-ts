@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { AddFood, GetRestaurantProfile, RestaurantLogin, UpdateRestaurantProfile, UpdateRestaurantServices } from '../controllers';
+import { AddFood, GetFoods, GetRestaurantProfile, RestaurantLogin, UpdateRestaurantProfile, UpdateRestaurantServices } from '../controllers';
 import { Authenticate } from '../middlewares';
 
 const restaurantRouter = express.Router();
@@ -13,7 +13,7 @@ restaurantRouter.patch('/profile', UpdateRestaurantProfile)
 restaurantRouter.patch('/services', UpdateRestaurantServices)
 
 restaurantRouter.post('/food', AddFood)
-restaurantRouter.get('/foods')
+restaurantRouter.get('/foods', GetFoods)
 
 restaurantRouter.get('/', (req: Request, res: Response, next: NextFunction) => {
     res.json({ message: 'Hello from RestaurantRoute' })

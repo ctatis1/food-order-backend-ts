@@ -116,7 +116,10 @@ export const GetFoods =async (req: Request, res: Response, next: NextFunction) =
     const user = req.user
 
     if(user){
-
+        const foods = await Food.find({ restaurantId: user._id })
+        if(foods !== null){
+            return res.json(foods)
+        }
     }
     return res.json({ "Message": "There are no food found" })
 }
