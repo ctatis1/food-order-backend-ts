@@ -8,3 +8,8 @@ export interface CreateRestaurantInput{
     pincode: string,
     address: string,
 }
+
+export interface RestaurantLoginInput{
+    email: string
+    password: string
+}
