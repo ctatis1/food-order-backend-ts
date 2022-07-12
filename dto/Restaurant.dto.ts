@@ -13,3 +13,10 @@ export interface RestaurantLoginInput{
     email: string
     password: string
 }
+
+export interface RestaurantPayload{
+    _id: string
+    name: string,
+    email: string,
+    foodType: [string]
+}

@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from 'express'
 import { RestaurantLoginInput } from '../dto'
 import { Restaurant } from '../models'
-import { ValidatePassword } from '../utils'
+import { GenerateSignature, ValidatePassword } from '../utils'
 import { FindRestaurant } from './AdminControllers'
 
 export const RestaurantLogin = async (req: Request, res: Response, next: NextFunction) => {
@@ -13,13 +13,32 @@ export const RestaurantLogin = async (req: Request, res: Response, next: NextFun
         const validation = await ValidatePassword(password, existingRestaurant.password, existingRestaurant.salt)
         
         if(validation){
-            return res.json(existingRestaurant)
+            const signature = GenerateSignature({
+                _id: existingRestaurant._id,
+                name: existingRestaurant.name,
+                email: existingRestaurant.email,
+                foodType: existingRestaurant.foodType,
+            })
+
+            return res.json(signature)
         }else{
             return res.json({'Message': 'Password invalid' })
         }
     }
 
     return res.json({ "Message": "Login credentials are not correct" })
+
+}
+
+export const GetRestaurantProfile =async (req: Request, res: Response, next: NextFunction) => {
+    
+}
+
+export const UpdateRestaurantProfile =async (req: Request, res: Response, next: NextFunction) => {
+
+}
+
+export const UpdateRestaurantServices =async (req: Request, res: Response, next: NextFunction) => {
 
 }
 

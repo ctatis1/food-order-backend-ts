@@ -1,4 +1,9 @@
 import bcrypt from 'bcrypt';
+import { RestaurantPayload } from '../dto';
+import jwt from 'jsonwebtoken';
+import { APP_SECRET } from '../config';
+import { Request } from 'express'
+import { AuthPayload } from '../dto/Auth.dto';
 
 export const GenerateSalt = async () => {
     return await bcrypt.genSalt()
@@ -10,4 +15,21 @@ export const GeneratePassword = async (password: string, salt: string) => {
 
 export const ValidatePassword = async (enteredPassword: string, savedPassword: string, salt: string) => {
     return await GeneratePassword(enteredPassword, salt) === savedPassword
+}
+
+export const GenerateSignature = (payload: RestaurantPayload) => {
+    return jwt.sign(payload, APP_SECRET, { expiresIn: '1d'});
+}
+
+export const ValidateSignature = async (req: Request) => {
+    const signature = req.get('Authorization')
+    if(signature){
+        const payload = await jwt.verify(signature.split(' ')[1], APP_SECRET) as AuthPayload
+        
+        
+
+        return true
+    }
+    
+    return false
 }
