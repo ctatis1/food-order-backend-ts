@@ -11,7 +11,7 @@ interface RestaurantDoc extends Document{
     address: string;
 /*     foods: any; */
     salt: string;
-    serviceAvailable: string;
+    serviceAvailable: boolean;
     coverImages: [string];
     rating: number;
 }

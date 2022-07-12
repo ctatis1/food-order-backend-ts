@@ -64,6 +64,20 @@ export const UpdateRestaurantProfile =async (req: Request, res: Response, next: 
 }
 
 export const UpdateRestaurantServices =async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user
 
+    if(user){
+        const existingRestaurant = await FindRestaurant(user._id)
+
+        if(existingRestaurant !== null){
+            existingRestaurant.serviceAvailable = !existingRestaurant.serviceAvailable;
+            
+            const savedResult = await existingRestaurant.save()
+            return res.json(savedResult);
+        }
+
+        return res.json(existingRestaurant)
+    }
+    return res.json({ "Message": "Login data not found" })
 }
 
