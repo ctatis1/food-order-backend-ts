@@ -1,29 +1,20 @@
 import express from 'express';
-import bodyParser from 'body-parser';
-import mongoose from 'mongoose';
-import {AdminRoute, RestaurantRoute} from './routes'
-import { MONGODB_URI } from './config';
-import path from 'path'
+import App from './services/ExpressApp';
+import dbConnection from './services/Database'
 
-const app = express();
-
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use('/images', express.static(path.join(__dirname, 'images')))
-
-app.use('/admin', AdminRoute);
-app.use('/restaurant', RestaurantRoute);
-
-mongoose
-    .connect(MONGODB_URI)
-    .then(result => {
-        console.log('Connected to Mongodb')
-    })
-    .catch( error => 
-        console.log('Message: ', error)
-    )
-
-app.listen(8000, () => {
+const StartServer = async () => {
+    const app = express();
+    
     console.clear();
-    console.log('App listening at port 8000')
-})
+    
+    await dbConnection()
+
+    await App(app)
+
+    app.listen(8000, () => {
+        
+        console.log('App listening at port 8000')
+    })
+}
+
+StartServer()

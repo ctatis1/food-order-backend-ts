@@ -26,8 +26,8 @@ const RestaurantSchema = new Schema({
     pincode: { type: String, required: true },
     address: { type: String },
     foods: [{
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: 'food'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Food'
     }],
     salt: { type: String, required: true },
     serviceAvailable: { type: Boolean, required: true },
