@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import multer from 'multer';    
-import { AddFood, GetFoods, GetRestaurantProfile, RestaurantLogin, UpdateRestaurantProfile, UpdateRestaurantServices } from '../controllers';
+import { AddFood, GetFoods, GetRestaurantProfile, RestaurantLogin, UpdateRestaurantCoverImage, UpdateRestaurantProfile, UpdateRestaurantServices } from '../controllers';
 import { Authenticate } from '../middlewares';
 
 const restaurantRouter = express.Router();
@@ -22,6 +22,7 @@ restaurantRouter.use(Authenticate)
 
 restaurantRouter.get('/profile', GetRestaurantProfile)
 restaurantRouter.patch('/profile', UpdateRestaurantProfile)
+restaurantRouter.patch('/coverImage', images, UpdateRestaurantCoverImage)
 restaurantRouter.patch('/services', UpdateRestaurantServices)
 
 restaurantRouter.post('/food', images, AddFood);

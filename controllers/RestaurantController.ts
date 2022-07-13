@@ -65,6 +65,28 @@ export const UpdateRestaurantProfile =async (req: Request, res: Response, next: 
     return res.json({ "Message": "Login data not found" })
 }
 
+export const UpdateRestaurantCoverImage =async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user
+
+    if(user){
+
+        const restaurant = await FindRestaurant(user._id)
+
+        if(restaurant !== null){
+
+            const files = req.files as [Express.Multer.File];
+
+            const images = files.map((file: Express.Multer.File) => file.filename);
+
+            restaurant.coverImages.push(...images)
+            const result = await restaurant.save();
+
+            res.json(result)
+        }
+    }
+    return res.json({ "Message": "Something went wrong adding food" })
+}
+
 export const UpdateRestaurantServices =async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user
 
