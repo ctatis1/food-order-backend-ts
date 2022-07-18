@@ -1,9 +1,9 @@
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { Request, Response, NextFunction} from 'express';
-import { CustomerSignUpInputs } from '../dto';
+import { CustomerSignUpInputs, UserLoginInputs } from '../dto';
 import { Customer } from '../models/Customer';
-import { GeneratePassword, GenerateSalt, GenerateSignature } from '../utils';
+import { GeneratePassword, GenerateSalt, GenerateSignature, ValidatePassword } from '../utils';
 
 export const CustomerSignUp =async (req: Request, res: Response, next: NextFunction) => {
 
@@ -20,6 +20,11 @@ export const CustomerSignUp =async (req: Request, res: Response, next: NextFunct
 
     const salt = await GenerateSalt()
     const userPassword = await GeneratePassword(password,salt);
+
+    const existingCustomer = await Customer.findOne({ email: email});
+    if(existingCustomer !==  null) {
+        return res.json({ Message: "Customer already exists"});
+    }
 
     const result = await Customer.create({
         email: email,
@@ -49,8 +54,29 @@ export const CustomerSignUp =async (req: Request, res: Response, next: NextFunct
 
 }
 
-export const CustomerLogin =async (req: Request, res: Response, next: NextFunction) => {
+export const CustomerLogin = async (req: Request, res: Response, next: NextFunction) => {
+    const loginInputs = plainToClass( UserLoginInputs, req.body);
 
+    const loginErrors = await validate(loginInputs, { validationError: { target: true } });
+    if(loginErrors.length > 0) {
+        return res.status(403).json(loginErrors);
+    }
+
+    const { email, password } = loginInputs;
+    const customer = await Customer.findOne({ email: email });
+    if(customer){
+        const validation = await ValidatePassword(password, customer.password, customer.salt);
+        if(validation){
+            const signature = GenerateSignature({
+                _id: customer._id,
+                email: customer.email,
+                verified: customer.verify
+            })
+            //Send result to client
+            return res.status(200).json({ signature: signature, verify: customer.verify, email: customer.email});
+        }
+    }
+    return res.status(404).json({ Message: 'Error with the Login' });
 }
 
 export const CustomerVerify =async (req: Request, res: Response, next: NextFunction) => {

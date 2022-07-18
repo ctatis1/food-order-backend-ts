@@ -1,5 +1,6 @@
 import express from 'express';
 import { CustomerLogin, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile } from '../controllers';
+import { Authenticate } from '../middlewares';
 
 const customerRouter = express.Router();
 
@@ -13,7 +14,7 @@ customerRouter.post('/login', CustomerLogin)
 
 //Authentication
 
-customerRouter.get('/authentication')
+customerRouter.use(Authenticate)
 
 //Verify Account 
 
