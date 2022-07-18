@@ -1,5 +1,5 @@
 import express from 'express';
-import { CustomerLogin, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, RequestOtp } from '../controllers';
+import { CustomerLogin, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile } from '../controllers';
 
 const customerRouter = express.Router();
 
@@ -18,10 +18,6 @@ customerRouter.get('/authentication')
 //Verify Account 
 
 customerRouter.patch('/verify', CustomerVerify)
-
-//OTP 
-
-customerRouter.get('/otp', RequestOtp)
 
 //Profile
 

@@ -1,9 +1,9 @@
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
-import express, { Request, Response, NextFunction} from 'express';
-import { CustomerSignUpInputs } from '../dto/Customer.dto';
+import { Request, Response, NextFunction} from 'express';
+import { CustomerSignUpInputs } from '../dto';
 import { Customer } from '../models/Customer';
-import { GenerateOtp, GeneratePassword, GenerateSalt } from '../utils';
+import { GeneratePassword, GenerateSalt, GenerateSignature } from '../utils';
 
 export const CustomerSignUp =async (req: Request, res: Response, next: NextFunction) => {
 
@@ -19,21 +19,13 @@ export const CustomerSignUp =async (req: Request, res: Response, next: NextFunct
     const {email, password, phone} = customerInputs
 
     const salt = await GenerateSalt()
-    const userPassword = await GeneratePassword(password,salt)
-
-    const { otp, expiry } = GenerateOtp();
-
-    console.log(otp, expiry);
-    return res.json('working...')
-    
+    const userPassword = await GeneratePassword(password,salt);
 
     const result = await Customer.create({
         email: email,
         password: userPassword,
         salt: salt,
         phone: phone,
-        otp: otp,
-        otp_expiry: expiry,
         firstname: '',
         lastname: '',
         address: '',
@@ -43,12 +35,17 @@ export const CustomerSignUp =async (req: Request, res: Response, next: NextFunct
     })
 
     if(result){
-        //send OTP to customer
-
         //Generate Signature
-
+        const signature = GenerateSignature({
+            _id: result._id,
+            email: result.email,
+            verified: result.verify
+        })
         //Send result to client
+        return res.status(200).json({ signature: signature, verify: result.verify, email: result.email});
     }
+
+    return res.status(404).json({ Message: 'Error with the Signup' });
 
 }
 
@@ -60,9 +57,6 @@ export const CustomerVerify =async (req: Request, res: Response, next: NextFunct
 
 }
 
-export const RequestOtp =async (req: Request, res: Response, next: NextFunction) => {
-
-}
 
 export const GetCustomerProfile =async (req: Request, res: Response, next: NextFunction) => {
 
