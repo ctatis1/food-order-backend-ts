@@ -1,7 +1,7 @@
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { Request, Response, NextFunction} from 'express';
-import { CustomerSignUpInputs, UserLoginInputs } from '../dto';
+import { CustomerSignUpInputs, EditCustomerProfileInputs, UserLoginInputs } from '../dto';
 import { Customer } from '../models/Customer';
 import { GeneratePassword, GenerateSalt, GenerateSignature, ValidatePassword } from '../utils';
 
@@ -85,10 +85,39 @@ export const CustomerVerify =async (req: Request, res: Response, next: NextFunct
 
 
 export const GetCustomerProfile =async (req: Request, res: Response, next: NextFunction) => {
+    const customer = req.user
 
+    if(customer){
+        const profile = await Customer.findById(customer._id);
+        if(profile){
+            return res.status(200).json(profile);
+        }
+
+    }
 }
 
 export const EditCustomerProfile =async (req: Request, res: Response, next: NextFunction) => {
+    const customer = req.user
 
+    const profileInputs = plainToClass(EditCustomerProfileInputs, req.body);
+    
+    const profileError = await validate(profileInputs, { validationError: { target: false } })
+    if(profileError.length > 0) {
+        return res.status(403).json(profileError);
+    }
+
+    const {firstname, lastname, address } = profileInputs;
+    if(customer){
+        const profile = await Customer.findById(customer._id);
+        if(profile){
+            profile.firstname = firstname;
+            profile.lastname = lastname;
+            profile.address = address;
+            
+            const result = await profile.save();
+            return res.status(200).json(result);
+        }
+
+    }
 }
 
