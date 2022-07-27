@@ -1,5 +1,5 @@
 import express from 'express';
-import { CustomerLogin, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile } from '../controllers';
+import { CustomerLogin, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, GetOrderById, GetAllOrders, CreateOrder } from '../controllers';
 import { Authenticate } from '../middlewares';
 
 const customerRouter = express.Router();
@@ -27,6 +27,9 @@ customerRouter.patch('/profile', EditCustomerProfile)
 
 //Cart
 //Order
+customerRouter.get('/orders', GetAllOrders);
+customerRouter.get('/order/:id', GetOrderById);
+customerRouter.post('/create-order', CreateOrder);
 
 //Payment
 

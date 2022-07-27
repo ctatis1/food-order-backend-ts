@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { CreateRestaurant, GetRestaurantById, GetRestaurants } from '../controllers';
+import { CreateRestaurant, GetRestaurantById, GetRestaurants } from '../controllers'
 
 const adminRouter = express.Router();
 
