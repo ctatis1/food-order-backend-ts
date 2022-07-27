@@ -125,7 +125,14 @@ export const EditCustomerProfile =async (req: Request, res: Response, next: Next
 }
 
 export const GetAllOrders = async (req: Request, res: Response, next: NextFunction) => {
+    const customer = req.user
 
+    if(customer){
+        const profile = await Customer.findById(customer._id).populate('orders');
+        if(profile){
+            res.status(200).json(profile.orders);
+        }
+    }
 }
 
 export const GetOrderById = async (req: Request, res: Response, next: NextFunction) => {
@@ -167,9 +174,9 @@ export const CreateOrder = async (req: Request, res: Response, next: NextFunctio
 
             if(currentOrder){
                 profile?.orders.push(currentOrder);
-                const profileResponse = await profile?.save();
+                await profile?.save();
 
-                return res.status(200).json(profileResponse);
+                return res.status(200).json(currentOrder);
             }
         }
 
