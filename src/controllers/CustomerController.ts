@@ -130,13 +130,18 @@ export const GetAllOrders = async (req: Request, res: Response, next: NextFuncti
     if(customer){
         const profile = await Customer.findById(customer._id).populate('orders');
         if(profile){
-            res.status(200).json(profile.orders);
+            return res.status(200).json(profile.orders);
         }
     }
 }
 
 export const GetOrderById = async (req: Request, res: Response, next: NextFunction) => {
+    const orderId = req.params.id;
 
+    if(orderId){
+        const order = await Order.findById(orderId).populate('items.food');
+        return res.status(200).json(order);
+    }
 }
 
 export const CreateOrder = async (req: Request, res: Response, next: NextFunction) => {
